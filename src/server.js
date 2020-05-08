@@ -1,7 +1,9 @@
 
 var http = require('http');
+var events = require('events');
+var emitter = new events.EventEmitter();
 
-http.createServer(function (request, response) {
+let server = http.createServer(function (request, response) {
 
   // 发送 HTTP 头部
   // HTTP 状态值: 200 : OK
