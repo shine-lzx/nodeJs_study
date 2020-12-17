@@ -11,6 +11,8 @@ const login = (account, password) => {
   }
 }
 
+const register = () => {}
+
 module.exports = {
   login,
 }

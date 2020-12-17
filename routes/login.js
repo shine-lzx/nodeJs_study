@@ -9,13 +9,25 @@ router.post('/login', async (req, res, next) => {
   res.send(userData)
 })
 
-// let _sql = 'SELECT * FROM WHERE account="wdy" and password="123123" v_user order by createTime desc'
-let _sql = 'SELECT * FROM v_user order by createTime desc'
+let _sql = 'SELECT * FROM user'
 router.get('/userList', (req, res, next) => {
-//   console.log('headers: ', req.headers['accept-encoding'])
   db.query(_sql, [], function (results, fields) {
-    res.json({ results })
+    res.json({ code: '00000', data: [...results], msg: '成功' })
   })
+})
+
+router.post('/register', (req, res, next) => {
+  const { userId, name, gender, weapon } = req.body
+  console.log('req.body: ', req.body)
+  db.query(
+    `INSERT INTO user(userId, name, gender, weapon) VALUES(${userId},${
+      name + ''
+    },${gender},${weapon + ''})`,
+    (err, res) => {
+      if (err) throw err
+      res.json({ code: '00000', data: 0, msg: '成功' })
+    }
+  )
 })
 
 module.exports = router
