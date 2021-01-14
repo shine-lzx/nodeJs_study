@@ -1,14 +1,15 @@
-var createError = require('http-errors')
-var express = require('express')
-var path = require('path')
-var cookieParser = require('cookie-parser')
-var bodyParser = require('body-parser') /*post方法*/
-var logger = require('morgan')
-var indexRouter = require('./routes/index')
-var usersRouter = require('./routes/users')
+let createError = require('http-errors')
+let express = require('express')
+let path = require('path')
+let cookieParser = require('cookie-parser')
+let bodyParser = require('body-parser') /*post方法*/
+let logger = require('morgan')
+let indexRouter = require('./routes/index')
+let usersRouter = require('./routes/users')
 let loginRouter = require('./routes/login')
-
-var app = express()
+let pcRouter = require('./routes/pc')
+let app = express()
+// let autoroute = require('express-autoroute')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -27,6 +28,13 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', indexRouter)
 app.use('/app', usersRouter)
 app.use('/appLogin', loginRouter)
+app.use('/pc', pcRouter)
+// autoroute(app, options) //where app is an express app;
+// autoroute(app, {
+//   throwErrors: false,
+//   logger: require('winston'),
+//   routesDir: 'routes',
+// })
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
