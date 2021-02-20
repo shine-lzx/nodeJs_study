@@ -8,6 +8,7 @@ let indexRouter = require('./routes/index')
 let usersRouter = require('./routes/users')
 let loginRouter = require('./routes/login')
 let pcRouter = require('./routes/pc')
+let homeRouter = require('./routes/home')
 let app = express()
 // let autoroute = require('express-autoroute')
 
@@ -29,6 +30,10 @@ app.use('/', indexRouter)
 app.use('/app', usersRouter)
 app.use('/appLogin', loginRouter)
 app.use('/pc', pcRouter)
+app.use('/homePage', homeRouter)
+
+// 托管静态文件
+app.use('/static', express.static(path.join(__dirname, 'static')))
 // autoroute(app, options) //where app is an express app;
 // autoroute(app, {
 //   throwErrors: false,

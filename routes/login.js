@@ -1,9 +1,20 @@
-var express = require('express')
-var router = express.Router()
+const express = require('express')
+const router = express.Router()
 const { login, register } = require('../controller/user')
-var db = require('../conf/db')
+const db = require('../conf/db')
 const { v4: uuidv4 } = require('uuid')
 const { Succeed, Failed } = require('../model/resModel')
+const { readFileFun } = require('../utils/readFile')
+const path = require('path')
+const fs = require('fs')
+
+var cheerio = require('cheerio')
+var request = require('request')
+var iconv = require('iconv-lite')
+
+// let aaa = readFileFun(path.join(__dirname, '../static/images'))
+// console.log('aaa: ', aaa)
+
 router.post('/login', async (req, res, next) => {
   const { phone, password } = req.body
   const userInfo = await login(phone, password)
@@ -52,6 +63,39 @@ router.get('/userList', (req, res, next) => {
 })
 
 router.post('/deleteFile', (req, res, next) => {
+  // const filePath = 'http://localhost:3000/static/images/bhz.jpg'
+
+  // try {
+  //   res.send(
+  //     new Succeed({
+  //       data: filePath,
+  //     })
+  //   )
+  // } catch (error) {
+  //   res.send(new Failed(null, null, error))
+  // }
+
+  const filePath = path.resolve(__dirname, `../static/images/shy.png`)
+  const cs = fs.createReadStream(filePath)
+
+  cs.on('data', (chunk) => {
+    let base64Image = chunk.toString('base64')
+
+    try {
+      res.send(
+        new Succeed({
+          data: 'data:image/png;base64,' + base64Image,
+        })
+      )
+    } catch (error) {
+      console.log('error: ', error)
+    }
+  })
+
+  cs.on('end', () => {
+    res.end()
+  })
+
   // fs.unlink('F:/projectFile/nodeJs_study/static/test.txt', (err) => {
   //   try {
   //     res.send(
@@ -75,6 +119,19 @@ router.post('/deleteFile', (req, res, next) => {
   //   if (err) throw err
   //   console.log(`文件属性: ${JSON.stringify(stats)}`)
   // })
+})
+
+const getWeather = () => {
+  let url = 'http://wthrcdn.etouch.cn/weather_mini?citykey=101190905'
+  request({ url, encoding: null }, (err, response, body) => {
+    let data = iconv.decode(body, 'utf-8')
+    console.log(data)
+  })
+}
+
+router.get('/getWeather', (req, res, err) => {
+  getWeather()
+  res.json({ data: '666' })
 })
 
 module.exports = router
